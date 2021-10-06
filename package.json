@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "task1": "nodemon task1.js",
-    "task2": "nodemon task2.js",
+    "task1": "nodemon index.js --task1",
+    "task2": "nodemon index.js --task2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Tim New",

@@ -19,4 +19,4 @@ const task1 = () => {
   });
 };
 
-module.exports = task1();
+module.exports = task1;

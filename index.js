@@ -1,18 +1,16 @@
-const readline = require('readline');
+const task1 = require("./task1");
+const task2 = require("./task2");
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-  terminal: true,
-  prompt: 'Enter a string: ',
-});
+const arg = process.argv.splice(2);
 
-rl.prompt();
-
-rl.on('line', (line) => {
-  const reversedStr = line.split("").reverse().join("")
-  process.stdout.write(`${reversedStr}\n`)
-  rl.prompt();
-}).on('close', () => {
-  process.exit(0);
-});
+switch (arg[0]) {
+  case "--task1":
+    task1();
+    break;
+  case "--task2":
+    task2();
+    break;
+  default:
+    console.log("No valid argument given - closing");
+    process.exit(0);
+}

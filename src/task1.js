@@ -1,4 +1,4 @@
-const readline = require("readline");
+import readline from 'readline';
 
 const reverseString = (line) => {
   const reversedStr = line.trim().split("").reverse().join("");
@@ -21,4 +21,4 @@ const task1 = () => {
   rl.on("close", handleClose);
 };
 
-module.exports = task1;
+export default task1;

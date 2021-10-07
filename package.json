@@ -4,13 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "task1": "nodemon index.js --task1",
-    "task2": "nodemon index.js --task2",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "babel ./src -d ./dist",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "task1": "npm run build && nodemon dist/index.js --task1",
+    "task2": "npm run build && nodemon dist/index.js --task2"
   },
   "author": "Tim New",
   "license": "ISC",
   "devDependencies": {
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.5",
+    "@babel/preset-env": "^7.15.6",
     "csvtojson": "^2.0.10"
   }
 }

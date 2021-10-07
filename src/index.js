@@ -1,5 +1,5 @@
-const task1 = require("./task1");
-const task2 = require("./task2");
+import task1 from "./task1";
+import task2 from "./task2";
 
 const arg = process.argv.splice(2);
 

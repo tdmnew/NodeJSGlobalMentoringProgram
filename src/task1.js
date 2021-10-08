@@ -1,4 +1,4 @@
-import readline from 'readline';
+import readline from "readline";
 
 const reverseString = (line) => {
   const reversedStr = line.trim().split("").reverse().join("");

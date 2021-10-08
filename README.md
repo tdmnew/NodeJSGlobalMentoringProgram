@@ -1,6 +1,6 @@
 # NodeJSGlobalMentoringProgram
 
-Created in compliance with the EPAM Node.JS Global Mentoring Programme
+Created in compliance with the EPAM Node.JS Global Mentoring Program
 
 ## How to run
 

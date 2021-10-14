@@ -1,5 +1,14 @@
 const readline = require("readline");
 
+const reverseString = (line) => {
+  const reversedStr = line.trim().split("").reverse().join("");
+  process.stdout.write(`${reversedStr}\n\n`);
+};
+
+const handleError = (err) => console.error(err)
+
+const handleClose = () => process.exit(0)
+
 const task1 = () => {
   const rl = readline.createInterface({
     input: process.stdin,
@@ -7,12 +16,9 @@ const task1 = () => {
     terminal: false,
   });
 
-  rl.on("line", (line) => {
-    const reversedStr = line.trim().split("").reverse().join("");
-    process.stdout.write(`${reversedStr}\n\n`);
-  }).on("close", () => {
-    process.exit(0);
-  });
+  rl.on("line", reverseString);
+  rl.on("error", handleError);
+  rl.on("close", handleClose);
 };
 
 module.exports = task1;

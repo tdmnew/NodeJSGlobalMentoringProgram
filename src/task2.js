@@ -1,16 +1,10 @@
-<<<<<<< HEAD:task2.js
-const { pipeline } = require("stream");
-const path = require("path");
-const fs = require("fs");
-const csv = require("csvtojson");
-=======
-import { pipeline } from 'stream';
-import fs from 'fs';
-import csv from 'csvtojson';
->>>>>>> 8bd785a (Added babel, src and dist folders):src/task2.js
+import { pipeline } from "stream";
+import path from "path";
+import fs from "fs";
+import csv from "csvtojson";
 
-const csvFilePath = path.join(__dirname, "./csv/nodejs-hw1-ex1.csv");
-const outputFilePath = path.join(__dirname, "./csvparsed.txt");
+const csvFilePath = path.join(__dirname, "../csv/nodejs-hw1-ex1.csv");
+const outputFilePath = path.join(__dirname, "../csvparsed.txt");
 
 const handleStreamFinish = (err) => {
   if (err) {

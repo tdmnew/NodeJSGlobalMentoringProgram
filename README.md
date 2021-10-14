@@ -12,4 +12,4 @@ Created in compliance with the EPAM Node.JS Global Mentoring Program
 Once the repository has been cloned and the node modules have been installed:
 
 - `npm run task1` will run a program that will reverse a string
-- `npm run task1` will run a program that will take a csv input and convert it to JSON
+- `npm run task2` will run a program that will take a csv input and convert it to JSON

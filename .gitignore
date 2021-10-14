@@ -2,8 +2,6 @@ node_modules/
 dist/
 csvparsed.txt
 
-csvparsed.txt
-
 .env
 .env.test
 .env.production

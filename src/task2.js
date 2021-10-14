@@ -1,10 +1,10 @@
-const { pipeline } = require("stream");
-const path = require("path");
-const fs = require("fs");
-const csv = require("csvtojson");
+import { pipeline } from "stream";
+import path from "path";
+import fs from "fs";
+import csv from "csvtojson";
 
-const csvFilePath = path.join(__dirname, "./csv/nodejs-hw1-ex1.csv");
-const outputFilePath = path.join(__dirname, "./csvparsed.txt");
+const csvFilePath = path.join(__dirname, "../csv/nodejs-hw1-ex1.csv");
+const outputFilePath = path.join(__dirname, "../csvparsed.txt");
 
 const handleStreamFinish = (err) => {
   if (err) {
@@ -22,4 +22,4 @@ const task2 = () => {
   pipeline(inputFile, csv(), outputFile, handleStreamFinish);
 };
 
-module.exports = task2;
+export default task2;

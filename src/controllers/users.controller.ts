@@ -55,9 +55,17 @@ export const updateUser = (req: Request, res: Response) => {
   if (!user || user.isDeleted) {
     res.status(404).send(USER_NOT_FOUND);
   } else {
-    user.login = login;
-    user.password = password;
-    user.age = age;
+    if (login) {
+      user.login = login;
+    }
+
+    if (password) {
+      user.password = password;
+    }
+
+    if (age) {
+      user.age = age;
+    }
 
     data.splice(data.indexOf(user), 1, user);
 

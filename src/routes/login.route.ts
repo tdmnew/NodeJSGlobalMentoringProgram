@@ -7,7 +7,7 @@ const router = Router();
 
 router
   .route("/")
-  .get(validateLogin, loginController.login);
+  .post(validateLogin, loginController.login);
 
 export default router;
 

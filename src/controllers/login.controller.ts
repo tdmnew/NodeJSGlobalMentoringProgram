@@ -10,7 +10,7 @@ export const login = (req: Request, res: Response) => {
   const user: User | undefined = data.find((user) => user.login === login);
 
   if(!user || user.password !== password) {
-    res.status(404).send(CREDENTIALS_INCORRECT);
+    res.status(400).send(CREDENTIALS_INCORRECT);
   } else {
     res.send(LOGIN_SUCCESSFUL);
   }

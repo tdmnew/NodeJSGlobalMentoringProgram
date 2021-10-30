@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
-import { User } from "../interfaces";
-import  data from "../db";
+import User from "../interfaces/user";
+import data from "../db";
 
 import { CREDENTIALS_INCORRECT, LOGIN_SUCCESSFUL } from "../constants";
 

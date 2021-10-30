@@ -1,7 +1,7 @@
 import { uuid } from "uuidv4";
 import { Request, Response } from "express";
 
-import { User } from "../interfaces";
+import User from "../interfaces/user";
 import data from "../db";
 import { USERS_NOT_FOUND, USER_NOT_FOUND } from "../constants";
 

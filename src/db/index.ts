@@ -1,5 +1,5 @@
 // Our fancy 'database'
-import { User } from "../interfaces";
+import User from "../interfaces/user";
 
 const data: User[] = [];
 

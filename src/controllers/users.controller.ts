@@ -2,7 +2,7 @@ import { uuid } from "uuidv4";
 import { Request, Response } from "express";
 
 import { User } from "../interfaces";
-import { data } from "../db";
+import data from "../db";
 import { USERS_NOT_FOUND, USER_NOT_FOUND } from "../constants";
 
 const getAutoSuggestions = (loginSubstring: string, limit: number) => {
@@ -13,7 +13,7 @@ const getAutoSuggestions = (loginSubstring: string, limit: number) => {
 };
 
 export const createUser = (req: Request, res: Response) => {
-  let user: User = req.body;
+  const user: User = req.body;
   user.id = uuid();
   user.isDeleted = false;
 
@@ -30,9 +30,9 @@ export const getUsers = (req: Request, res: Response) => {
 
   if (!sortedList || sortedList.length === 0) {
     res.status(404).send(USERS_NOT_FOUND);
-  } else {
-    res.json(sortedList);
   }
+
+  res.json(sortedList);
 };
 
 export const getUser = (req: Request, res: Response) => {
@@ -41,16 +41,16 @@ export const getUser = (req: Request, res: Response) => {
 
   if (!user || user.isDeleted) {
     res.status(404).send(USER_NOT_FOUND);
-  } else {
-    res.json(user);
   }
+
+  res.json(user);
 };
 
 export const updateUser = (req: Request, res: Response) => {
   const id = req.params.id as User["id"];
   const { login, password, age } = req.body as User;
 
-  let user: User | undefined = data.find((user) => user.id === id);
+  const user: User | undefined = data.find((user) => user.id === id);
 
   if (!user || user.isDeleted) {
     res.status(404).send(USER_NOT_FOUND);
@@ -75,7 +75,7 @@ export const updateUser = (req: Request, res: Response) => {
 
 export const deleteUser = (req: Request, res: Response) => {
   const id = req.params.id as User["id"];
-  let user: User | undefined = data.find((user) => user.id === id);
+  const user: User | undefined = data.find((user) => user.id === id);
 
   if (!user || user.isDeleted) {
     res.status(404).send(USER_NOT_FOUND);

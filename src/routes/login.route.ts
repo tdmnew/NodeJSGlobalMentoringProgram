@@ -1,13 +1,12 @@
 import { Router } from "express";
 
 import { validateLogin } from "../validations";
-import { loginController } from "../controllers";
+import loginController from "../controllers";
 
 const router = Router();
 
 router
   .route("/")
-  .post(validateLogin, loginController.login);
+  .post(validateLogin, loginController);
 
 export default router;
-

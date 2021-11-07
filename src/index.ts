@@ -1,12 +1,24 @@
-import express, { json } from "express";
+import dotenv from "dotenv";
+import express from "express";
 
-import routes from './routes';
+dotenv.config();
+
+import loaders from "./loaders";
 
 const PORT = 3000;
-const app = express();
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-app.use(json());
-app.use(routes);
+const startServer = async () => {
+  const app = express();
+
+  await loaders({ expressApp: app });
+
+  app
+    .listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    })
+    .on("error", (err) => {
+      console.error(err);
+    });
+};
+
+startServer();

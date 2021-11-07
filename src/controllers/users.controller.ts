@@ -1,29 +1,39 @@
 import { uuid } from "uuidv4";
 import { Request, Response } from "express";
+import { Op } from "sequelize";
 
-import User from "../interfaces/user";
-import data from "../db";
+import User from "../types/user";
+import Users from "../models/user.model";
+
 import { USERS_NOT_FOUND, USER_NOT_FOUND } from "../constants";
 
-const getAutoSuggestions = (loginSubstring: string, limit: number) => {
-  return data
-    .filter((user) => user.login.includes(loginSubstring))
-    .sort((a, b) => a.login.localeCompare(b.login))
-    .slice(0, limit);
+const getAutoSuggestions = async (loginSubstring: string, limit: number) => {
+  const users = await Users.findAll({
+    limit,
+    where: {
+      login: {
+        [Op.substring]: loginSubstring,
+      },
+    },
+  });
+
+  return users;
 };
 
 export const createUser = (req: Request, res: Response) => {
   const user: User = req.body;
+  console.log(user)
   user.id = uuid();
   user.isDeleted = false;
 
-  data.push(user);
+  Users.create(user);
   res.send(user);
 };
 
-export const getUsers = (req: Request, res: Response) => {
+export const getUsers = async (req: Request, res: Response) => {
   const { loginSubstring = "", limit = 10 } = req.query;
-  const sortedList: User[] | undefined = getAutoSuggestions(
+
+  const sortedList = await getAutoSuggestions(
     loginSubstring as string,
     limit as number
   );
@@ -35,53 +45,42 @@ export const getUsers = (req: Request, res: Response) => {
   res.json(sortedList);
 };
 
-export const getUser = (req: Request, res: Response) => {
+export const getUser = async (req: Request, res: Response) => {
   const id = req.params.id as User["id"];
-  const user: User | undefined = data.find((user) => user.id === id);
+  const user = Users.findOne({ where: { id, isDeleted: false } });
 
-  if (!user || user.isDeleted) {
+  if (!user) {
     res.status(404).send(USER_NOT_FOUND);
   }
 
   res.json(user);
 };
 
-export const updateUser = (req: Request, res: Response) => {
+export const updateUser = async (req: Request, res: Response) => {
   const id = req.params.id as User["id"];
   const { login, password, age } = req.body as User;
 
-  const user: User | undefined = data.find((user) => user.id === id);
+  const user = await Users.findOne({ where: { id, isDeleted: false } });
 
-  if (!user || user.isDeleted) {
+  if (!user) {
     res.status(404).send(USER_NOT_FOUND);
   } else {
-    if (login) {
-      user.login = login;
-    }
-
-    if (password) {
-      user.password = password;
-    }
-
-    if (age) {
-      user.age = age;
-    }
-
-    data.splice(data.indexOf(user), 1, user);
+    if (login) user.update({ login });
+    if (password) user.update({ password });
+    if (age) user.update({ age });
 
     res.send(user);
   }
 };
 
-export const deleteUser = (req: Request, res: Response) => {
+export const deleteUser = async (req: Request, res: Response) => {
   const id = req.params.id as User["id"];
-  const user: User | undefined = data.find((user) => user.id === id);
+  const user = await Users.findOne({ where: { id, isDeleted: false } });
 
-  if (!user || user.isDeleted) {
+  if (!user) {
     res.status(404).send(USER_NOT_FOUND);
   } else {
-    user.isDeleted = true;
-    data.splice(data.indexOf(user), 1, user);
+    user.update({ isDeleted: true });
     res.send(user);
   }
 };

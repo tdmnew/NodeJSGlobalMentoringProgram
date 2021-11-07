@@ -3,21 +3,25 @@ import { Router } from "express";
 import userRoute from "./users.route";
 import loginRoute from "./login.route";
 
-const router = Router();
+const routes = () => {
+  const app = Router();
 
-const routes = [
-  {
-    path: "/users",
-    route: userRoute,
-  },
-  {
-    path: "/login",
-    route: loginRoute,
-  },
-];
+  const paths = [
+    {
+      path: "/users",
+      route: userRoute,
+    },
+    {
+      path: "/login",
+      route: loginRoute,
+    },
+  ];
 
-routes.forEach((route) => {
-  router.use(route.path, route.route);
-});
+  paths.forEach((route) => {
+    app.use(route.path, route.route);
+  });
 
-export default router;
+  return app;
+};
+
+export default routes;

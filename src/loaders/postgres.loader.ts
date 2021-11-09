@@ -1,51 +1,24 @@
 import { Client } from "pg";
-
-const { DB_URI, DB_USER, DB_PASS, DB_HOST } = process.env;
-
-const createTable = `
-CREATE TABLE IF NOT EXISTS "users" (
-  "id" serial,
-  "login" varchar, 
-  "password" varchar, 
-  "age" int, 
-  "isDeleted" boolean DEFAULT false,
-  PRIMARY KEY ("id")
-);
-`;
-
-const createUser = `INSERT INTO users(login, password, age) VALUES($1, $2, $3);`;
-const checkExists = `SELECT * FROM users where login=$1`;
-
-const user1 = ["Tim", "Test123", 30];
-const user2 = ["Dmitry", "Test123", 22];
-
-const config = {
-  connectionString: DB_URI,
-  user: DB_USER,
-  pass: DB_PASS,
-  host: DB_HOST,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-};
+import { SQL } from "../config/index";
 
 const postgressLoader = async () => {
   try {
     // Initialise client
-    const client = new Client(config);
+    const client = new Client(SQL.CONFIG);
     const connection = await client.connect();
 
     // Populate table and users
-    await client.query(createTable);
+    await client.query(SQL.QUERIES.CREATE_TABLE);
 
-    const query1 = await client.query(checkExists, user1.slice(0, 1));
-    if (query1.rowCount !== 1) {
-      await client.query(createUser, user1);
-    }
+    // Create test users if they do not already exist
+    const query1 = await client.query(SQL.QUERIES.CHECK_EXISTS, [
+      ...SQL.USERS.USER_1.slice(0, 1),
+      ...SQL.USERS.USER_2.slice(0, 1),
+    ]);
 
-    const query2 = await client.query(checkExists, user2.slice(0, 1));
-    if (query2.rowCount !== 1) {
-      await client.query(createUser, user2);
+    if (query1.rowCount !== 2) {
+      await client.query(SQL.QUERIES.CREATE_USER, SQL.USERS.USER_1);
+      await client.query(SQL.QUERIES.CREATE_USER, SQL.USERS.USER_2);
     }
 
     console.log("Postgres DB Loaded");

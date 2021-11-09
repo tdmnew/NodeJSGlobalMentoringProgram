@@ -1,17 +1,17 @@
-import express, { json } from "express";
+import { Application, json } from "express";
 
-import routes from "../routes";
+import routes from "../api/routes";
 
-const expressLoader = ({ app }: { app: express.Application }) => {
+const expressLoader = ({ app }: { app: Application }) => {
   try {
-    app = express();
     app.use(json());
     app.use(routes());
+    console.log('Express Loaded');
   } catch (e) {
     console.error(e);
   }
 
-  console.log("Express Loaded");
+  return app;
 };
 
 export default expressLoader;

@@ -1,11 +1,7 @@
-import dotenv from "dotenv";
 import express from "express";
 
-dotenv.config();
-
 import loaders from "./loaders";
-
-const PORT = 3000;
+import { ENV_VARIABLES } from "./config";
 
 const startServer = async () => {
   const app = express();
@@ -13,8 +9,8 @@ const startServer = async () => {
   await loaders({ expressApp: app });
 
   app
-    .listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+    .listen(ENV_VARIABLES.SERVER_PORT, () => {
+      console.log(`Server running on port ${ENV_VARIABLES.SERVER_PORT}`);
     })
     .on("error", (err) => {
       console.error(err);

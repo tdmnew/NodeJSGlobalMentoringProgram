@@ -1,9 +1,8 @@
 import { Sequelize } from "sequelize";
-
-const { DB_URI } = process.env;
+import { ENV_VARIABLES } from "../config";
 
 const sequelizeLoader = async () => {
-  const sequelize = new Sequelize(DB_URI ?? "", {
+  const sequelize = new Sequelize(ENV_VARIABLES.DB_URI, {
     dialect: "postgres",
     dialectOptions: {
       ssl: {
@@ -15,12 +14,10 @@ const sequelizeLoader = async () => {
 
   try {
     await sequelize.authenticate();
+    console.log("Sequelize Loaded");
   } catch (error) {
-    console.error("Unable to connect to the database:", error);
+    console.error("Unable to connect to the database: ", error);
   }
-
-
-  console.log('Sequelize Loaded')
 };
 
 export default sequelizeLoader;

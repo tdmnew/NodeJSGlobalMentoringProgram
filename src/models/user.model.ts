@@ -1,8 +1,18 @@
 import { Sequelize, DataTypes } from "sequelize";
 
-const sequelize = new Sequelize("postgres::memory:");
+import { ENV_VARIABLES } from "../config";
 
-const User = sequelize.define("User", {
+const sequelize = new Sequelize(ENV_VARIABLES.DB_URI, {
+  dialect: "postgres",
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  },
+});
+
+const User = sequelize.define("users", {
   login: {
     type: DataTypes.STRING,
     allowNull: false,

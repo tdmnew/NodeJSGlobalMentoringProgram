@@ -5,3 +5,4 @@ csvparsed.txt
 .env
 .env.test
 .env.production
+.log/

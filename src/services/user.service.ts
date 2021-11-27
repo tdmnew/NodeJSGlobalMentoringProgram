@@ -38,15 +38,11 @@ class UserService {
 
     if (!user) return null;
 
-    if (userParams.login) {
-      await user.update({ login: userParams.login });
-    }
-    if (userParams.password) {
-      await user.update({ password: userParams.password });
-    }
-    if (userParams.age) {
-      await user.update({ age: userParams.age });
-    }
+    await user.update({
+      login: userParams.login,
+      password: userParams.password,
+      age: userParams.age,
+    });
 
     return user;
   }
@@ -74,7 +70,7 @@ class UserService {
 
     if (!user) return null;
 
-    await user.update({ isDeleted: true});
+    await user.update({ isDeleted: true });
     return user;
   }
 }

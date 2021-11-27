@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
 
 import { CREDENTIALS_INCORRECT, LOGIN_SUCCESSFUL } from "../../constants";
 import UserService from "../../services/user.service";
@@ -11,7 +12,7 @@ const login = async (req: Request, res: Response) => {
   const user = await userService.login(login, password);
 
   if (!user) {
-    res.status(400).send(CREDENTIALS_INCORRECT);
+    res.status(StatusCodes.BAD_REQUEST).send(CREDENTIALS_INCORRECT);
   }
 
   res.send(LOGIN_SUCCESSFUL);

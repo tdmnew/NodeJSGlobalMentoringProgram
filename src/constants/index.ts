@@ -10,3 +10,7 @@ export const PASSWORD_FIELD_EMPTY = "Please enter a password";
 export const PASSWORD_PATTERN_INCORRECT = "Password must contain a letter and number"
 export const AGE_FIELD_EMTPY = "Please enter an age"
 export const AGE_PATTERN_INCORRECT = "Age must be between 4 and 130"
+
+// Auto Suggestions
+export const AUTO_SUGGESTIONS_SUBSTRING = "";
+export const AUTO_SUGGESTIONS_LIMIT = 10;

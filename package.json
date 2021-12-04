@@ -4,13 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./src/index.ts",
+    "start": "npm run knex:migrate:latest && npm run knex:migrate:seed && nodemon ./src/index.ts",
     "build": "babel ./src -d ./dist --extensions '.ts'",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "reverse-string": "nodemon --exec babel-node ./src/utils/index.js --task1",
-    "csv-to-json": "nodemon --exec babel-node ./src/utils/index.js --task2"
+    "csv-to-json": "nodemon --exec babel-node ./src/utils/index.js --task2",
+    "knex:migrate:make": "knex --knexfile knexfile.ts migrate:make -x ts",
+    "knex:migrate:seed": "knex --knexfile knexfile.ts seed:run",
+    "knex:migrate:latest": "knex --knexfile knexfile.ts migrate:latest",
+    "knex:migrate:rollback": "knex --knexfile knexfile.ts migrate:rollback"
   },
   "author": "Tim New",
   "license": "ISC",
@@ -21,8 +25,10 @@
     "@babel/preset-env": "^7.15.6",
     "@babel/preset-typescript": "^7.15.0",
     "@types/express": "^4.17.13",
+    "@types/pg": "^8.6.1",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
+    "dotenv": "^10.0.0",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.25.2",
@@ -32,10 +38,15 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "csvtojson": "^2.0.10",
     "express": "^4.17.1",
     "express-joi-validation": "^5.0.0",
+    "http-status-codes": "^2.1.4",
     "joi": "^17.4.2",
+    "knex": "^0.95.14",
+    "pg": "^8.7.1",
+    "sequelize": "^6.9.0",
     "uuidv4": "^6.2.12"
   }
 }

@@ -5,7 +5,7 @@ import {
   validateUpdateUser,
   validateQuery,
   validateParams,
-} from "../validations";
+} from "../../validations";
 import { userController } from "../controllers";
 
 const router = Router();

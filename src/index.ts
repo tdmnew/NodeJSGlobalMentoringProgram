@@ -1,12 +1,20 @@
-import express, { json } from "express";
+import express from "express";
 
-import routes from './routes';
+import loaders from "./loaders";
+import { ENV_VARIABLES } from "./config";
 
-const PORT = 3000;
-const app = express();
+const startServer = async () => {
+  const app = express();
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-app.use(json());
-app.use(routes);
+  await loaders({ expressApp: app });
+
+  app
+    .listen(ENV_VARIABLES.SERVER_PORT, () => {
+      console.log(`Server running on port ${ENV_VARIABLES.SERVER_PORT}`);
+    })
+    .on("error", (err) => {
+      console.error(err);
+    });
+};
+
+startServer();

@@ -12,6 +12,7 @@
     "reverse-string": "nodemon --exec babel-node ./src/utils/index.js --task1",
     "csv-to-json": "nodemon --exec babel-node ./src/utils/index.js --task2",
     "knex:migrate:make": "knex --knexfile knexfile.ts migrate:make -x ts",
+    "knex:migrate:makeseed": "knex --knexfile knexfile.ts seed:make -x ts",
     "knex:migrate:seed": "knex --knexfile knexfile.ts seed:run",
     "knex:migrate:latest": "knex --knexfile knexfile.ts migrate:latest",
     "knex:migrate:rollback": "knex --knexfile knexfile.ts migrate:rollback"

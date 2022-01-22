@@ -1,6 +1,6 @@
 import { Model } from "sequelize";
 
-import UserModel from "../models/user.model";
+import { User as UserModel } from "../models";
 import User from "../types/user.type";
 
 import { userAccess } from "../data-access";

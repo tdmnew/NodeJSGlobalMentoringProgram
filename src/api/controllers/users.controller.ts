@@ -35,8 +35,8 @@ export const getUsers = async (req: Request, res: Response) => {
     } = req.query;
 
     const users = await userService.getUsers(
-    loginSubstring as string,
-    limit as number
+        loginSubstring as string,
+        limit as number
     );
 
     if (!users || users.length === 0) {

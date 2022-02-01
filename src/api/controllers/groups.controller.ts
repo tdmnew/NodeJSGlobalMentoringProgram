@@ -2,7 +2,8 @@ import { Request, Response } from "express";
 import { Model } from "sequelize";
 import { StatusCodes } from "http-status-codes";
 
-import { GROUPS_NOT_FOUND, GROUP_NOT_FOUND } from "../../constants";
+import CONSTANTS from "../../constants";
+const { GROUPS_NOT_FOUND, GROUP_NOT_FOUND } = CONSTANTS.CONTROLLER_RESPONSE;
 
 import Group from "../../types/group.type";
 import User from "../../types/user.type";
@@ -57,13 +58,13 @@ export const updateGroup = async (req: Request, res: Response) => {
 
   if (!group) {
     return res.status(StatusCodes.NOT_FOUND).send(GROUP_NOT_FOUND);
-  } else {
-    return res.send(group);
   }
+
+  return res.send(group);
 };
 
 export const addUsersToGroup = async (req: Request, res: Response) => {
-  const groupId = req.body.groupId as Group["id"];
+  const groupId = req.params.id as Group["id"];
   const userIds = req.body.userIds as Array<User["id"]>;
 
   const result: TransactionResult = await groupService.addUsersToGroup(
@@ -71,11 +72,11 @@ export const addUsersToGroup = async (req: Request, res: Response) => {
     userIds
   );
 
-  if (result.success) {
-    return res.status(StatusCodes.OK).send(result);
-  } else {
+  if (!result.success) {
     return res.status(StatusCodes.BAD_REQUEST).send(result);
   }
+
+  return res.status(StatusCodes.OK).send(result);
 };
 
 export const deleteGroup = async (req: Request, res: Response) => {
@@ -84,7 +85,7 @@ export const deleteGroup = async (req: Request, res: Response) => {
 
   if (!group) {
     return res.status(StatusCodes.NOT_FOUND).send(GROUP_NOT_FOUND);
-  } else {
-    return res.send(group);
   }
+
+  return res.send(group);
 };

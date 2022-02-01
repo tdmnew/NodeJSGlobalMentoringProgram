@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
-import { CREDENTIALS_INCORRECT, LOGIN_SUCCESSFUL } from "../../constants";
+import CONSTANTS from "../../constants";
+const { CREDENTIALS_INCORRECT, LOGIN_SUCCESSFUL } = CONSTANTS.CONTROLLER_RESPONSE;
+
 import UserService from "../../services/user.service";
 import { User as UserModel } from "../../models";
 

@@ -2,12 +2,17 @@ import { Request, Response } from "express";
 import { Model } from "sequelize";
 import { StatusCodes } from "http-status-codes";
 
-import {
+import CONSTANTS from "../../constants";
+
+const {
   USERS_NOT_FOUND,
   USER_NOT_FOUND,
-  AUTO_SUGGESTIONS_LIMIT,
-  AUTO_SUGGESTIONS_SUBSTRING,
-} from "../../constants";
+} = CONSTANTS.CONTROLLER_RESPONSE;
+
+const {
+  AUTO_SUGGESTIONS
+} = CONSTANTS.VALIDATION.USERS;
+
 
 import User from "../../types/user.type";
 import { User as UserModel } from "../../models";
@@ -24,8 +29,8 @@ export const createUser = async (req: Request, res: Response) => {
 
 export const getUsers = async (req: Request, res: Response) => {
   const {
-    loginSubstring = AUTO_SUGGESTIONS_SUBSTRING,
-    limit = AUTO_SUGGESTIONS_LIMIT,
+    loginSubstring = AUTO_SUGGESTIONS.SUBSTRING,
+    limit = AUTO_SUGGESTIONS.LIMIT,
   } = req.query;
 
   const users = await userService.getUsers(

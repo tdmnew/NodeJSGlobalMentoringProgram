@@ -1,6 +1,7 @@
 import Joi from "joi";
 
-import { LOGIN_FIELD_EMPTY, PASSWORD_FIELD_EMPTY } from "../constants";
+import CONSTANTS from "../constants/";
+const { LOGIN_FIELD_EMPTY, PASSWORD_FIELD_EMPTY } = CONSTANTS.VALIDATION.USERS;
 
 export const loginSchema = Joi.object({
   login: Joi.string().required().messages({

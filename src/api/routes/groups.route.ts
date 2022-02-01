@@ -17,8 +17,8 @@ router
   .post(validateCreateGroup, groupController.createGroup);
 
 router
-  .route("/add-users-to-group")
-  .post(validateAddUsersToGroup, groupController.addUsersToGroup);
+  .route("/:id/users/add-users-to-group")
+  .post(validateParams, validateAddUsersToGroup, groupController.addUsersToGroup);
 
 router
   .route("/:id")

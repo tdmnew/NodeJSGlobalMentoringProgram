@@ -1,12 +1,13 @@
 import Joi from "joi";
 
-import {
+import CONSTANTS from "../constants";
+const {
   NAME_FIELD_EMPTY,
   PERMISSIONS_FIELD_EMPTY,
   PERMISSIONS_PATTERN_INCORRECT,
   GROUP_ID_EMPTY,
   USER_IDS_PATTERN_INCORRECT,
-} from "../constants";
+} = CONSTANTS.VALIDATION.GROUPS;
 
 export const createGroupSchema = Joi.object({
   name: Joi.string().required().messages({
@@ -28,10 +29,6 @@ export const createGroupSchema = Joi.object({
 });
 
 export const addUsersToGroupSchema = Joi.object({
-  groupId: Joi.string().required().messages({
-    "any.required": GROUP_ID_EMPTY,
-    "string.empty": GROUP_ID_EMPTY,
-  }),
   userIds: Joi.array().items(Joi.string()).required().min(1).messages({
     "any.required": USER_IDS_PATTERN_INCORRECT,
     "array.min": USER_IDS_PATTERN_INCORRECT,

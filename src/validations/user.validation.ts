@@ -2,13 +2,14 @@ import Joi from "joi";
 
 const hasLettersAndNumbers = new RegExp("^(?=.*[a-zA-Z])(?=.*[0-9])");
 
-import {
+import CONSTANTS from "../constants";
+const {
   LOGIN_FIELD_EMPTY,
   PASSWORD_FIELD_EMPTY,
   PASSWORD_PATTERN_INCORRECT,
   AGE_FIELD_EMTPY,
   AGE_PATTERN_INCORRECT,
-} from "../constants";
+} = CONSTANTS.VALIDATION.USERS;
 
 export const createUserSchema = Joi.object({
   login: Joi.string().required().messages({

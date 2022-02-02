@@ -1,8 +1,8 @@
-import Joi from "joi";
+import Joi from 'joi';
 
 const querySchema = Joi.object({
-  loginSubstring: Joi.string(),
-  limit: Joi.number(),
+    loginSubstring: Joi.string(),
+    limit: Joi.number()
 });
 
 export default querySchema;

@@ -1,16 +1,16 @@
-import { createValidator } from "express-joi-validation";
+import { createValidator } from 'express-joi-validation';
 
-import { createUserSchema, updateUserSchema } from "./user.validation";
+import { createUserSchema, updateUserSchema } from './user.validation';
 
 import {
-  createGroupSchema,
-  updateGroupSchema,
-  addUsersToGroupSchema,
-} from "./group.validation";
+    createGroupSchema,
+    updateGroupSchema,
+    addUsersToGroupSchema
+} from './group.validation';
 
-import { loginSchema } from "./login.validation";
-import paramsScehma from "./params.validation";
-import querySchema from "./query.validation";
+import { loginSchema } from './login.validation';
+import paramsScehma from './params.validation';
+import querySchema from './query.validation';
 
 const validator = createValidator();
 

@@ -1,78 +1,81 @@
-import { Model } from "sequelize";
+import { Model } from 'sequelize';
 
-import { User as UserModel } from "../models";
-import User from "../types/user.type";
+import { User as UserModel } from '../models';
+import User from '../types/user.type';
 
-import { userAccess } from "../data-access";
+import { userAccess } from '../data-access';
 
-interface UserService {
+interface UserServiceInterface {
   userModel: typeof UserModel;
 }
 
 const { userLogin, findUser, autoSuggestions } = userAccess;
 
-class UserService {
-  constructor(userModel: typeof UserModel) {
-    this.userModel = userModel;
-  }
+class UserService implements UserServiceInterface {
+    userModel: UserServiceInterface['userModel'];
 
-  async login(login: User["login"], password: User["password"]) {
-    const user: Model<User> | null = await this.userModel.findOne(
-      userLogin(login, password)
-    );
+    constructor(userModel: UserServiceInterface['userModel']) {
+        this.userModel = userModel;
+    }
 
-    if (!user) return null;
+    async login(login: User['login'], password: User['password']): Promise<Model<User> | null> {
+        const user: Model<User> | null = await this.userModel.findOne(
+            userLogin(login, password)
+        );
 
-    return user;
-  }
+        if (!user) return null;
 
-  async createUser(userParams: Partial<User>) {
-    userParams.isDeleted = false;
+        return user;
+    }
 
-    const user = await this.userModel.create(userParams);
-    return user;
-  }
+    async createUser(userParams: Partial<User>): Promise<Model<User> | null>  {
+        userParams.isDeleted = false;
 
-  async updateUser(userId: User["id"], userParams: Partial<User>) {
-    const user = await this.userModel.findOne(findUser(userId));
+        const user = await this.userModel.create(userParams);
 
-    if (!user) return null;
+        return user;
+    }
 
-    await user.update({
-      login: userParams.login,
-      password: userParams.password,
-      age: userParams.age,
-    });
+    async updateUser(userId: User['id'], userParams: Partial<User>): Promise<Model<User> | null> {
+        const user = await this.userModel.findOne(findUser(userId));
 
-    return user;
-  }
+        if (!user) return null;
 
-  async getUser(userId: User["id"]) {
-    const user: Model<User> | null = await this.userModel.findOne(
-      findUser(userId)
-    );
+        await user.update({
+            login: userParams.login,
+            password: userParams.password,
+            age: userParams.age
+        });
 
-    return user;
-  }
+        return user;
+    }
 
-  async getUsers(loginSubstring: string, limit: number) {
-    const users: Model<User>[] = await this.userModel.findAll(
-      autoSuggestions(loginSubstring, limit)
-    );
+    async getUser(userId: User['id']): Promise<Model<User> | null> {
+        const user: Model<User> | null = await this.userModel.findOne(
+            findUser(userId)
+        );
 
-    if (!users) return null;
+        return user;
+    }
 
-    return users;
-  }
+    async getUsers(loginSubstring: string, limit: number): Promise<Model<User>[] | null> {
+        const users: Model<User>[] = await this.userModel.findAll(
+            autoSuggestions(loginSubstring, limit)
+        );
 
-  async deleteUser(userId: User["id"]) {
-    const user = await this.userModel.findOne(findUser(userId));
+        if (!users) return null;
 
-    if (!user) return null;
+        return users;
+    }
 
-    await user.update({ isDeleted: true });
-    return user;
-  }
+    async deleteUser(userId: User['id']): Promise<Model<User> | null> {
+        const user = await this.userModel.findOne(findUser(userId));
+
+        if (!user) return null;
+
+        await user.update({ isDeleted: true });
+        return user;
+    }
 }
 
 export default UserService;

@@ -1,4 +1,4 @@
-type Permission = "READ" | "WRITE" | "DELETE" | "SHARE" | "UPLOAD_FILES";
+type Permission = 'READ' | 'WRITE' | 'DELETE' | 'SHARE' | 'UPLOAD_FILES';
 
 type Group = {
   id: string;

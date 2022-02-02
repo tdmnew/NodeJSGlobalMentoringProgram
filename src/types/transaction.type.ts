@@ -1,4 +1,4 @@
-import UserGroup from "./usergroup.type";
+import UserGroup from './usergroup.type';
 
 type ValidationErrorItem = {
   message: string;
@@ -32,12 +32,12 @@ interface TransactionResult {
   success: boolean;
   result?: Array<UserGroup>;
   message?: string;
-  errors?: Array<ValidationErrorItem["message"]>;
+  errors?: Array<ValidationErrorItem['message']>;
 }
 
 export type {
-  ValidationErrorItem,
-  TransactionSuccess,
-  TransactionError,
-  TransactionResult,
+    ValidationErrorItem,
+    TransactionSuccess,
+    TransactionError,
+    TransactionResult
 };

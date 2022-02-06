@@ -1,9 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
 
 const apiLogger = (req: Request, res: Response, next: NextFunction) => {
-    const body = JSON.stringify(req.body);
+    const { body, originalUrl, method } = req;
 
-    console.table({ Time: new Date().toString(), Path: req.originalUrl, Method: req.method, Body: body });
+    const oldSend = res.send;
+    res.send = (data) => {
+        res.send = oldSend;
+        res.locals.body = JSON.stringify(data);
+        return res.send(data);
+    };
+
+    console.table({
+        Path: originalUrl,
+        Method: method,
+        'Request Body': JSON.stringify(body)
+    });
 
     next();
 };

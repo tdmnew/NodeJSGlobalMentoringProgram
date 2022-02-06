@@ -4,8 +4,16 @@ import userRoute from './users.route';
 import loginRoute from './login.route';
 import groupRoute from './groups.route';
 
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
 const routes = () => {
     const app = Router();
+
+    if (process.env.NODE_ENV === 'development') {
+        app.get('/error-test', ({}, {}, next) => {
+            return next(new Error('This is an error and it should be logged to the console'));
+        });
+    }
 
     const paths = [
         {

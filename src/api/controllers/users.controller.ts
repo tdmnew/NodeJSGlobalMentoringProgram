@@ -4,15 +4,9 @@ import { StatusCodes } from 'http-status-codes';
 
 import CONSTANTS from '../../constants';
 
-const {
-    USERS_NOT_FOUND,
-    USER_NOT_FOUND
-} = CONSTANTS.CONTROLLER_RESPONSE;
+const { USERS_NOT_FOUND, USER_NOT_FOUND } = CONSTANTS.CONTROLLER_RESPONSE;
 
-const {
-    AUTO_SUGGESTIONS
-} = CONSTANTS.VALIDATION.USERS;
-
+const { AUTO_SUGGESTIONS } = CONSTANTS.VALIDATION.USERS;
 
 import User from '../../types/user.type';
 import { User as UserModel } from '../../models';

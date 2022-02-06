@@ -1,0 +1,9 @@
+{"level":"error","message":"500 GET /error-test - 2.913 ms | \"{\\\"error\\\":\\\"This is an error and it should be logged to the console\\\"}\" | {}\n","timestamp":"2022-02-06T14:02:06.637Z"}
+{"level":"error","message":"500 PUT /users/0a350ce0-163e-42f6-ab4a-d147ad25b690 - 3.954 ms | \"{}\" | {\"login\":\"\"}\n","timestamp":"2022-02-06T14:02:30.385Z"}
+{"level":"error","message":"500 PUT /users/0a350ce0-163e-42f6-ab4a-d147ad25b690 - 1.074 ms | \"{}\" | {\"login\":\"\"}\n","timestamp":"2022-02-06T14:02:49.865Z"}
+{"level":"error","message":"500 PUT /users/0a350ce0-163e-42f6-ab4a-d147ad25b690 - 6.540 ms | \"{}\" | {\"login\":\"\"}\n","timestamp":"2022-02-06T14:03:30.659Z"}
+{"level":"error","message":"400 PUT /users/0a350ce0-163e-42f6-ab4a-d147ad25b690 - 6.535 ms | \"ValidationError: Please enter a login\" | {\"login\":\"\"}\n","timestamp":"2022-02-06T14:03:47.828Z"}
+{"level":"error","message":"500 GET /error-test - 1.062 ms | \"{\\\"error\\\":\\\"This is an error and it should be logged to the console\\\"}\" | {}\n","timestamp":"2022-02-06T14:04:05.040Z"}
+{"level":"error","message":"500 GET /error-test - 3.650 ms | \"{\\\"error\\\":\\\"This is an error and it should be logged to the console\\\"}\" | {}\n","timestamp":"2022-02-06T14:04:47.754Z"}
+{"level":"error","message":"400 PUT /users/0a350ce0-163e-42f6-ab4a-d147ad25b690 - 3.634 ms | {\"error\":\"ValidationError: Please enter a login\"} | {\"login\":\"\"}\n","timestamp":"2022-02-06T14:04:50.978Z"}
+{"level":"error","message":"404 GET /users/a1670fe1-7166-49e0-9bf4-570086f52dd5 - 222.437 ms | \"User not found\" | {\"login\":\"\"}\n","timestamp":"2022-02-06T14:06:25.614Z"}

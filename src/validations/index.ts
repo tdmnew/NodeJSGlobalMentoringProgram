@@ -12,7 +12,7 @@ import { loginSchema } from './login.validation';
 import paramsScehma from './params.validation';
 import querySchema from './query.validation';
 
-const validator = createValidator();
+const validator = createValidator({ passError: true });
 
 export const validateLogin = validator.body(loginSchema);
 

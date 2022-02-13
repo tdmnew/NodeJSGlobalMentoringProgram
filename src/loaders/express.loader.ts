@@ -1,19 +1,30 @@
+import morgan, { token } from 'morgan';
 import { Application, json } from 'express';
 
-import loggers from '../middlewares/loggers';
-import errorHandlers from '../middlewares/error-handlers';
+import HttpLogger from '../services/httpLogger.service';
+import routeLogger from '../middlewares/loggers/api.logger';
+import errorHandler from '../middlewares/error-handlers';
 
 import routes from '../api/routes';
 
+import { tokens, handlers } from '../config/morgan.config';
+
 const expressLoader = ({ app }: { app: Application }) => {
+    const httpLogger = new HttpLogger(morgan);
+    const { apiError, time } = handlers;
+
+    tokens.forEach((t) => {
+        token(t.name, t.cb);
+    });
+
     try {
         app.use(json());
-        app.use(loggers.time);
-        app.use(loggers.api);
-        app.use(loggers.error);
+        app.use(httpLogger.apiError(apiError.format, apiError.options));
+        app.use(httpLogger.time(time.format, time.options));
+        app.use(routeLogger);
         app.use(routes());
-        app.use(errorHandlers.joiError);
-        app.use(errorHandlers.internalError);
+        app.use(errorHandler.joiError);
+        app.use(errorHandler.internalError);
         console.log('Express Loaded');
     } catch (e) {
         console.error(e);

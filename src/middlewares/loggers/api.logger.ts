@@ -1,14 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, NextFunction } from 'express';
 
-const apiLogger = (req: Request, res: Response, next: NextFunction) => {
+const apiLogger = (req: Request, {}, next: NextFunction) => {
     const { body, originalUrl, method } = req;
-
-    const oldSend = res.send;
-    res.send = (data) => {
-        res.send = oldSend;
-        res.locals.body = JSON.stringify(data);
-        return res.send(data);
-    };
 
     console.table({
         Path: originalUrl,

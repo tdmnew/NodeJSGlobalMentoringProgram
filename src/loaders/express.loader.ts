@@ -10,14 +10,14 @@ import routes from '../api/routes';
 import { tokens, handlers } from '../config/morgan.config';
 
 const expressLoader = ({ app }: { app: Application }) => {
-    const httpLogger = new HttpLogger(morgan);
-    const { apiError, time } = handlers;
-
-    tokens.forEach((t) => {
-        token(t.name, t.cb);
-    });
-
     try {
+        const httpLogger = new HttpLogger(morgan);
+        const { apiError, time } = handlers;
+
+        tokens.forEach((t) => {
+            token(t.name, t.cb);
+        });
+
         app.use(json());
         app.use(httpLogger.apiError(apiError.format, apiError.options));
         app.use(httpLogger.time(time.format, time.options));

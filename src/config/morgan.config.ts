@@ -1,15 +1,9 @@
-import { Request, Response } from 'express';
+import { Request } from 'express';
 
 import logger from './winston.config';
 import { Handler } from '../types/logger.type';
 
 export const tokens = [
-    {
-        name: 'response-body',
-        cb: ({}, res: Response) => {
-            return res.locals.body;
-        }
-    },
     {
         name: 'request-body',
         cb: (req: Request, {}) => {
@@ -21,7 +15,7 @@ export const tokens = [
 
 export const handlers: Record<string, Handler> = {
     apiError: {
-        format: ':status :method :url - :response-time ms | :response-body | :request-body',
+        format: ':status :method :url - :response-time ms | :request-body',
         options: {
             stream: {
                 write: (message) => logger.error(message)

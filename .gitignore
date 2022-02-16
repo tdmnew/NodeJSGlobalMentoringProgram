@@ -1,8 +1,8 @@
 node_modules/
 dist/
+logs/
 csvparsed.txt
 
 .env
 .env.test
 .env.production
-.log/

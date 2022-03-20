@@ -1,5 +1,7 @@
 import { Router } from 'express';
 
+import auth from '../../middlewares/auth';
+
 import {
     validateCreateUser,
     validateUpdateUser,
@@ -10,15 +12,19 @@ import { userController } from '../controllers';
 
 const router = Router();
 
+const { route, register } = auth;
+
+const { getUsers, getUser, updateUser, deleteUser } = userController;
+
 router
     .route('/')
-    .get(validateQuery, userController.getUsers)
-    .post(validateCreateUser, userController.createUser);
+    .get(validateQuery, route, getUsers)
+    .post(validateCreateUser, register);
 
 router
     .route('/:id')
-    .get(validateParams, userController.getUser)
-    .put(validateUpdateUser, userController.updateUser)
-    .delete(validateParams, userController.deleteUser);
+    .get(validateParams, route, getUser)
+    .put(validateUpdateUser, route, updateUser)
+    .delete(validateParams, route, deleteUser);
 
 export default router;

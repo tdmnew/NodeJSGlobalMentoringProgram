@@ -14,14 +14,6 @@ import UserService from '../../services/user.service';
 
 const userService = new UserService(UserModel);
 
-export const createUser = async (req: Request, res: Response) => {
-    const user: User = req.body;
-
-    const createdUser: Model<User> | null = await userService.createUser(user);
-
-    return res.send(createdUser);
-};
-
 export const getUsers = async (req: Request, res: Response) => {
     const {
         loginSubstring = AUTO_SUGGESTIONS.SUBSTRING,
@@ -42,7 +34,7 @@ export const getUsers = async (req: Request, res: Response) => {
 
 export const getUser = async (req: Request, res: Response) => {
     const id = req.params.id as User['id'];
-    const user: Model<User> | null = await userService.getUser(id);
+    const user: Model<User> | null = await userService.getUser({ userId: id });
 
     if (!user) {
         return res.status(StatusCodes.NOT_FOUND).send(USER_NOT_FOUND);

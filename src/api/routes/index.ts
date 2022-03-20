@@ -1,8 +1,9 @@
 import { Router } from 'express';
 
 import userRoute from './users.route';
-import loginRoute from './login.route';
 import groupRoute from './groups.route';
+
+import auth from '../../middlewares/auth';
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
@@ -11,7 +12,11 @@ const routes = () => {
 
     if (process.env.NODE_ENV === 'development') {
         app.get('/error-test', ({}, {}, next) => {
-            return next(new Error('This is an error and it should be logged to the console'));
+            return next(
+                new Error(
+                    'This is an error and it should be logged to the console'
+                )
+            );
         });
     }
 
@@ -23,16 +28,14 @@ const routes = () => {
         {
             path: '/groups',
             route: groupRoute
-        },
-        {
-            path: '/login',
-            route: loginRoute
         }
     ];
 
     paths.forEach((route) => {
         app.use(route.path, route.route);
     });
+
+    app.use('/login', auth.login);
 
     return app;
 };

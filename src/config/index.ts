@@ -9,6 +9,7 @@ if (env.error) {
 }
 
 export const ENV_VARIABLES = {
+    JWT_SECRET: process.env.JWT_SECRET,
     SERVER_PORT: process.env.SERVER_PORT,
     DB_URI: process.env.DB_URI ?? '',
     DB_USER: process.env.DB_USER,

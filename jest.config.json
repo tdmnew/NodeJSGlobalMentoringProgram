@@ -1,0 +1,5 @@
+{
+    "testRegex": "((\\.|/*.)(spec))\\.ts?$",
+    "setupFilesAfterEnv": ["<rootDir>/.jest/setupTest.ts"],
+    "globalSetup": "<rootDir>/.jest/dotenv-test.ts"
+}

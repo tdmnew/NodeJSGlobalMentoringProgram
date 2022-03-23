@@ -1,8 +1,12 @@
 import { Router } from 'express';
 
 import userRoute from './users.route';
-import groupRoute from './groups.route';
 import loginRoute from './login.route';
+import groupRoute from './groups.route';
+<<<<<<< HEAD
+import loginRoute from './login.route';
+=======
+>>>>>>> Added tests for user controller
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 

@@ -4,8 +4,8 @@ import bcrypt from 'bcrypt';
 import { User as UserModel } from '../models';
 import User from '../types/user.type';
 import { userAccess } from '../data-access';
-import CONSTANTS from '../constants';
 
+import CONSTANTS from '../constants';
 const {
     REGISTER_SUCCESSFUL,
     REGISTER_UNSUCCESSFUL,

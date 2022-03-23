@@ -19,12 +19,17 @@ import UserService from '../../services/user.service';
 
 const userService = new UserService(UserModel);
 
+<<<<<<< HEAD
 export const createUser = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
     const { user, info } = await userService.createUser(req.body);
+=======
+export const createUser = async (req: Request, res: Response) => {
+    const { user, info, token } = await userService.createUser(req.body);
+>>>>>>> Added tests for user controller
 
     if (info === REGISTER_USER_EXISTS) {
         return res.status(StatusCodes.BAD_REQUEST).json({ info });
@@ -34,9 +39,13 @@ export const createUser = async (
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ info });
     }
 
+<<<<<<< HEAD
     res.locals.user = { user, info };
 
     return next();
+=======
+    return res.json({ user, info, token });
+>>>>>>> Added tests for user controller
 };
 
 export const getUsers = async (req: Request, res: Response) => {

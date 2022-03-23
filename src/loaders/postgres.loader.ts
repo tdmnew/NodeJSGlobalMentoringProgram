@@ -3,7 +3,7 @@ import { SQL } from '../config/index';
 
 const postgressLoader = async () => {
     try {
-    // Initialise client
+        // Initialise client
         const client = new Client(SQL.CONFIG);
         const connection = await client.connect();
 

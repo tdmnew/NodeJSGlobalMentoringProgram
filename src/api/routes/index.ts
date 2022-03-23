@@ -2,8 +2,7 @@ import { Router } from 'express';
 
 import userRoute from './users.route';
 import groupRoute from './groups.route';
-
-import auth from '../../middlewares/auth';
+import loginRoute from './login.route';
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
@@ -28,14 +27,16 @@ const routes = () => {
         {
             path: '/groups',
             route: groupRoute
+        },
+        {
+            path: '/login',
+            route: loginRoute
         }
     ];
 
     paths.forEach((route) => {
         app.use(route.path, route.route);
     });
-
-    app.use('/login', auth.login);
 
     return app;
 };

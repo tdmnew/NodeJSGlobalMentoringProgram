@@ -12,14 +12,15 @@ import { userController } from '../controllers';
 
 const router = Router();
 
-const { route, register } = auth;
+const { route } = auth;
 
-const { getUsers, getUser, updateUser, deleteUser } = userController;
+const { createUser, getUsers, getUser, updateUser, deleteUser } =
+    userController;
 
 router
     .route('/')
     .get(validateQuery, route, getUsers)
-    .post(validateCreateUser, register);
+    .post(validateCreateUser, createUser);
 
 router
     .route('/:id')

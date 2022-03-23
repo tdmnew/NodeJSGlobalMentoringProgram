@@ -4,7 +4,12 @@ import { StatusCodes } from 'http-status-codes';
 
 import CONSTANTS from '../../constants';
 
-const { USERS_NOT_FOUND, USER_NOT_FOUND } = CONSTANTS.CONTROLLER_RESPONSE;
+const {
+    USERS_NOT_FOUND,
+    USER_NOT_FOUND,
+    REGISTER_UNSUCCESSFUL,
+    REGISTER_USER_EXISTS
+} = CONSTANTS.CONTROLLER_RESPONSE;
 
 const { AUTO_SUGGESTIONS } = CONSTANTS.VALIDATION.USERS;
 
@@ -13,6 +18,20 @@ import { User as UserModel } from '../../models';
 import UserService from '../../services/user.service';
 
 const userService = new UserService(UserModel);
+
+export const createUser = async (req: Request, res: Response) => {
+    const { user, info, token } = await userService.createUser(req.body);
+
+    if (info === REGISTER_USER_EXISTS) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ info });
+    }
+
+    if (info === REGISTER_UNSUCCESSFUL) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ info });
+    }
+
+    return res.json({ user, info, token });
+};
 
 export const getUsers = async (req: Request, res: Response) => {
     const {

@@ -12,20 +12,20 @@ import { userController } from '../controllers';
 
 const router = Router();
 
-const { route } = auth;
-
 const { createUser, getUsers, getUser, updateUser, deleteUser } =
     userController;
 
+const { signToken, secureRoute } = auth;
+
 router
     .route('/')
-    .get(validateQuery, route, getUsers)
-    .post(validateCreateUser, createUser);
+    .get(validateQuery, secureRoute, getUsers)
+    .post(validateCreateUser, createUser, signToken);
 
 router
     .route('/:id')
-    .get(validateParams, route, getUser)
-    .put(validateUpdateUser, route, updateUser)
-    .delete(validateParams, route, deleteUser);
+    .get(validateParams, secureRoute, getUser)
+    .put(validateUpdateUser, secureRoute, updateUser)
+    .delete(validateParams, secureRoute, deleteUser);
 
 export default router;

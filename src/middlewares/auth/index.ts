@@ -1,7 +1,9 @@
-import route from './route.auth';
+import secureRoute from './secureRoute.auth';
+import signToken from './signToken.auth';
 
 const auth = {
-    route
+    secureRoute,
+    signToken
 };
 
 export default auth;

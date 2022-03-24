@@ -1,14 +1,11 @@
 import { Model } from 'sequelize';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 
 import { User as UserModel } from '../models';
 import User from '../types/user.type';
-
 import { userAccess } from '../data-access';
-
-import { ENV_VARIABLES } from '../config';
 import CONSTANTS from '../constants';
+
 const {
     REGISTER_SUCCESSFUL,
     REGISTER_UNSUCCESSFUL,
@@ -23,7 +20,6 @@ interface UserServiceInterface {
 
 interface UserAccessToken {
     user?: Model<User>;
-    token?: string;
     info?: string;
 }
 
@@ -74,15 +70,7 @@ class UserService implements UserServiceInterface {
 
         if (!user || !isValidPass) return { info: CREDENTIALS_INCORRECT };
 
-        const token = jwt.sign(
-            {
-                data: user.get('id'),
-                exp: Math.floor(Date.now() / 1000) + 60 * 60
-            },
-            ENV_VARIABLES.JWT_SECRET ?? ''
-        );
-
-        return { user, token, info: LOGIN_SUCCESSFUL };
+        return { user, info: LOGIN_SUCCESSFUL };
     }
 
     async createUser(
@@ -111,15 +99,7 @@ class UserService implements UserServiceInterface {
             isDeleted: false
         });
 
-        const token = jwt.sign(
-            {
-                data: newUser.get('id'),
-                exp: Math.floor(Date.now() / 1000) + 60 * 60
-            },
-            ENV_VARIABLES.JWT_SECRET ?? ''
-        );
-
-        return { user: newUser, info: REGISTER_SUCCESSFUL, token };
+        return { user: newUser, info: REGISTER_SUCCESSFUL };
     }
 
     async updateUser(
@@ -130,9 +110,11 @@ class UserService implements UserServiceInterface {
 
         if (!user) return null;
 
+        const hashedPassword = await hashPassword(userParams.password);
+
         await user.update({
             login: userParams.login,
-            password: await hashPassword(userParams.password),
+            password: hashedPassword,
             age: userParams.age
         });
 

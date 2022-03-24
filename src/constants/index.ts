@@ -36,6 +36,12 @@ const CONSTANTS = {
             GROUP_ID_EMPTY: 'Please enter a valid group id',
             USER_IDS_PATTERN_INCORRECT: 'Please enter one more or user ids'
         }
+    },
+    JWT_STATUS: {
+        NO_AUTH_TOKEN: 'No auth token',
+        INVALID_TOKEN: 'invalid token',
+        JWT_EXPIRED: 'jwt expired',
+        JWT_MALFORMED: 'jwt malformed'
     }
 };
 

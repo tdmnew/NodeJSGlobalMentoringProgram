@@ -1,10 +1,13 @@
 import { Router } from 'express';
 
-import login from '../controllers';
+import loginController from '../controllers/login.controller';
+import auth from '../../middlewares/auth';
 import { validateLogin } from '../../validations';
 
 const router = Router();
 
-router.route('/').post(validateLogin, login);
+const { signToken } = auth;
+
+router.route('/').post(validateLogin, loginController, signToken);
 
 export default router;

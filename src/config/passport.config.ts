@@ -2,12 +2,7 @@ import passport from 'passport';
 import { ExtractJwt, Strategy as JWTStrategy } from 'passport-jwt';
 
 import UserService from '../services/user.service';
-
 import { User as UserModel } from '../models';
-
-import CONSTANTS from '../constants';
-const { UNAUTHORIZED } = CONSTANTS.CONTROLLER_RESPONSE;
-
 import { ENV_VARIABLES } from '.';
 
 const userService = new UserService(UserModel);
@@ -20,17 +15,14 @@ const localStrategy = () => {
                 jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
                 secretOrKey: ENV_VARIABLES.JWT_SECRET
             },
-            async (id, cb) => {
+            async (id) => {
                 try {
                     const user = await userService.getUser(id);
+                    if (!user) return null;
 
-                    if (user) {
-                        return cb(null, user);
-                    }
-
-                    return cb(null, false, { message: UNAUTHORIZED });
+                    return user;
                 } catch (err) {
-                    cb(err);
+                    return err;
                 }
             }
         )

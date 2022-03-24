@@ -13,8 +13,6 @@ import { groupController } from '../controllers';
 
 const router = Router();
 
-const { route } = auth;
-
 const {
     getGroup,
     getGroups,
@@ -24,19 +22,26 @@ const {
     addUsersToGroup
 } = groupController;
 
+const { secureRoute } = auth;
+
 router
     .route('/')
-    .get(validateQuery, route, getGroups)
-    .post(validateCreateGroup, route, createGroup);
+    .get(validateQuery, secureRoute, getGroups)
+    .post(validateCreateGroup, secureRoute, createGroup);
 
 router
     .route('/:id/users/add-users-to-group')
-    .post(validateParams, validateAddUsersToGroup, route, addUsersToGroup);
+    .post(
+        validateParams,
+        validateAddUsersToGroup,
+        secureRoute,
+        addUsersToGroup
+    );
 
 router
     .route('/:id')
-    .get(validateParams, route, getGroup)
-    .put(validateUpdateGroup, route, updateGroup)
-    .delete(validateParams, route, deleteGroup);
+    .get(validateParams, secureRoute, getGroup)
+    .put(validateUpdateGroup, secureRoute, updateGroup)
+    .delete(validateParams, secureRoute, deleteGroup);
 
 export default router;

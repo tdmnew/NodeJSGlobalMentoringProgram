@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { Model } from 'sequelize';
 import { StatusCodes } from 'http-status-codes';
 
@@ -19,8 +19,12 @@ import UserService from '../../services/user.service';
 
 const userService = new UserService(UserModel);
 
-export const createUser = async (req: Request, res: Response) => {
-    const { user, info, token } = await userService.createUser(req.body);
+export const createUser = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { user, info } = await userService.createUser(req.body);
 
     if (info === REGISTER_USER_EXISTS) {
         return res.status(StatusCodes.BAD_REQUEST).json({ info });
@@ -30,7 +34,9 @@ export const createUser = async (req: Request, res: Response) => {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ info });
     }
 
-    return res.json({ user, info, token });
+    res.locals.user = { user, info };
+
+    return next();
 };
 
 export const getUsers = async (req: Request, res: Response) => {

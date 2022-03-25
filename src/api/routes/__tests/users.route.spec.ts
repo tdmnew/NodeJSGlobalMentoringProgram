@@ -1,4 +1,4 @@
-import express, { json } from 'express';
+import express, { json, NextFunction } from 'express';
 import request from 'supertest';
 
 import users from '../users.route';
@@ -42,11 +42,10 @@ const createdUser = {
 
 const successfulUserCreation = {
     info: REGISTER_SUCCESSFUL,
-    token: '',
     user: createdUser
 };
 
-jest.mock('../../../middlewares/auth/route.auth.ts', () =>
+jest.mock('../../../middlewares/auth/secureRoute.auth', () =>
     jest.fn((req, res, next) => next())
 );
 

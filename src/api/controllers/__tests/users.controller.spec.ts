@@ -57,6 +57,10 @@ jest.mock('../../../services/user.service.ts', () => {
     });
 });
 
+jest.mock('../../../middlewares/auth/signToken.auth.ts', () => {
+    return jest.fn().mockReturnValue(successfulUserCreation);
+});
+
 describe("When the method 'getUser' is called", () => {
     it('should 200 and return correct value', async () => {
         const req = getMockReq({ params: { id: '1' } });
@@ -112,7 +116,11 @@ describe("When the method 'createUser' is called", () => {
             locals: successfulUserCreation
         });
 
-        await createUser(req, res);
+        const next = jest
+            .fn()
+            .mockReturnValue(res.json(successfulUserCreation));
+
+        await createUser(req, res, next);
 
         expect(res.json).toHaveBeenCalledWith(successfulUserCreation);
     });

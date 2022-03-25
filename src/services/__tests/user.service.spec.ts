@@ -1,6 +1,5 @@
 import SequelizeMock from 'sequelize-mock';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 
 import UserService from '../user.service';
 
@@ -33,17 +32,13 @@ const updatedUserParams = {
 
 const successfulUserCreation = {
     user: user2,
-    info: REGISTER_SUCCESSFUL,
-    token: ''
+    info: REGISTER_SUCCESSFUL
 };
 
 const mockUserModel = MockDB.define('users', user1);
 
 const bcryptMock = jest.spyOn(bcrypt, 'hash');
 bcryptMock.mockImplementation(() => HASHED_PASS);
-
-const jwtMock = jest.spyOn(jwt, 'sign');
-jwtMock.mockImplementation(() => '');
 
 test("when 'getUser' is called with the correct parameters", async () => {
     const userService = new UserService(mockUserModel);

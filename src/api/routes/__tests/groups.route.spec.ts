@@ -32,7 +32,7 @@ const userToAdd = {
     isDeleted: false
 };
 
-jest.mock('../../../middlewares/auth/route.auth.ts', () =>
+jest.mock('../../../middlewares/auth/secureRoute.auth.ts', () =>
     jest.fn((req, res, next) => next())
 );
 

@@ -1,12 +1,13 @@
 import { Router } from 'express';
 
+import loginController from '../controllers/login.controller';
+import auth from '../../middlewares/auth';
 import { validateLogin } from '../../validations';
-import loginController from '../controllers';
 
 const router = Router();
 
-router
-    .route('/')
-    .post(validateLogin, loginController);
+const { signToken } = auth;
+
+router.route('/').post(validateLogin, loginController, signToken);
 
 export default router;

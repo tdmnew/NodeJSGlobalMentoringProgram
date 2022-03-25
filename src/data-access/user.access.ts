@@ -3,21 +3,20 @@ import { Op } from 'sequelize';
 import User from '../types/user.type';
 import { Group } from '../models';
 
-export const userLogin = (
-    login: User['login'],
-    password: User['password']
-) => ({
-    where: { login, password }
-});
-
-export const findUser = (id: User['id']) => ({
+export const findUser = ({
+    id,
+    login
+}: {
+    id?: User['id'];
+    login?: User['login'];
+}) => ({
     include: [
         {
             model: Group,
             as: 'groups'
         }
     ],
-    where: { id, isDeleted: false }
+    where: { ...(id && { id }), ...(login && { login }), isDeleted: false }
 });
 
 export const autoSuggestions = (loginSubstring?: string, limit?: number) => ({

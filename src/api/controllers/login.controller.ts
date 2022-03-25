@@ -1,23 +1,25 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 import CONSTANTS from '../../constants';
-const { CREDENTIALS_INCORRECT, LOGIN_SUCCESSFUL } = CONSTANTS.CONTROLLER_RESPONSE;
+const { CREDENTIALS_INCORRECT } = CONSTANTS.CONTROLLER_RESPONSE;
 
 import UserService from '../../services/user.service';
 import { User as UserModel } from '../../models';
 
 const userService = new UserService(UserModel);
 
-const loginUser = async (req: Request, res: Response) => {
+const loginUser = async (req: Request, res: Response, next: NextFunction) => {
     const { login, password } = req.body;
-    const user = await userService.login(login, password);
+    const { user, info } = await userService.login(login, password);
 
-    if (!user) {
-        return res.status(StatusCodes.BAD_REQUEST).send(CREDENTIALS_INCORRECT);
+    if (info === CREDENTIALS_INCORRECT) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ info });
     }
 
-    return res.send(LOGIN_SUCCESSFUL);
+    res.locals.user = { user, info };
+
+    return next();
 };
 
 export default loginUser;

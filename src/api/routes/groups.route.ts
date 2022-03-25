@@ -1,5 +1,7 @@
 import { Router } from 'express';
 
+import auth from '../../middlewares/auth';
+
 import {
     validateCreateGroup,
     validateUpdateGroup,
@@ -11,19 +13,35 @@ import { groupController } from '../controllers';
 
 const router = Router();
 
+const {
+    getGroup,
+    getGroups,
+    updateGroup,
+    createGroup,
+    deleteGroup,
+    addUsersToGroup
+} = groupController;
+
+const { secureRoute } = auth;
+
 router
     .route('/')
-    .get(validateQuery, groupController.getGroups)
-    .post(validateCreateGroup, groupController.createGroup);
+    .get(validateQuery, secureRoute, getGroups)
+    .post(validateCreateGroup, secureRoute, createGroup);
 
 router
     .route('/:id/users/add-users-to-group')
-    .post(validateParams, validateAddUsersToGroup, groupController.addUsersToGroup);
+    .post(
+        validateParams,
+        validateAddUsersToGroup,
+        secureRoute,
+        addUsersToGroup
+    );
 
 router
     .route('/:id')
-    .get(validateParams, groupController.getGroup)
-    .put(validateUpdateGroup, groupController.updateGroup)
-    .delete(validateParams, groupController.deleteGroup);
+    .get(validateParams, secureRoute, getGroup)
+    .put(validateUpdateGroup, secureRoute, updateGroup)
+    .delete(validateParams, secureRoute, deleteGroup);
 
 export default router;

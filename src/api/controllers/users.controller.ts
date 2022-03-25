@@ -1,10 +1,15 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { Model } from 'sequelize';
 import { StatusCodes } from 'http-status-codes';
 
 import CONSTANTS from '../../constants';
 
-const { USERS_NOT_FOUND, USER_NOT_FOUND } = CONSTANTS.CONTROLLER_RESPONSE;
+const {
+    USERS_NOT_FOUND,
+    USER_NOT_FOUND,
+    REGISTER_UNSUCCESSFUL,
+    REGISTER_USER_EXISTS
+} = CONSTANTS.CONTROLLER_RESPONSE;
 
 const { AUTO_SUGGESTIONS } = CONSTANTS.VALIDATION.USERS;
 
@@ -14,12 +19,24 @@ import UserService from '../../services/user.service';
 
 const userService = new UserService(UserModel);
 
-export const createUser = async (req: Request, res: Response) => {
-    const user: User = req.body;
+export const createUser = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { user, info } = await userService.createUser(req.body);
 
-    const createdUser: Model<User> | null = await userService.createUser(user);
+    if (info === REGISTER_USER_EXISTS) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ info });
+    }
 
-    return res.send(createdUser);
+    if (info === REGISTER_UNSUCCESSFUL) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ info });
+    }
+
+    res.locals.user = { user, info };
+
+    return next();
 };
 
 export const getUsers = async (req: Request, res: Response) => {
@@ -42,7 +59,7 @@ export const getUsers = async (req: Request, res: Response) => {
 
 export const getUser = async (req: Request, res: Response) => {
     const id = req.params.id as User['id'];
-    const user: Model<User> | null = await userService.getUser(id);
+    const user: Model<User> | null = await userService.getUser({ userId: id });
 
     if (!user) {
         return res.status(StatusCodes.NOT_FOUND).send(USER_NOT_FOUND);

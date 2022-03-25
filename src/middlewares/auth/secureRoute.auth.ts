@@ -10,32 +10,35 @@ const { NO_AUTH_TOKEN, INVALID_TOKEN, JWT_EXPIRED, JWT_MALFORMED } =
     CONSTANTS.JWT_STATUS;
 
 const secureRoute = (req: Request, res: Response, next: NextFunction) => {
-    passport.authenticate('jwt', { session: false }, (err, user, info) => {
+    passport.authenticate('jwt', (err, user, info) => {
         if (err) return next(err);
 
         switch (info?.message) {
             case JWT_EXPIRED:
             case JWT_MALFORMED:
             case INVALID_TOKEN:
-                return res
-                    .status(StatusCodes.FORBIDDEN)
-                    .json({ message: FORBIDDEN });
+                res.locals.authentication = FORBIDDEN;
+                break;
             case NO_AUTH_TOKEN:
-                return res
-                    .status(StatusCodes.UNAUTHORIZED)
-                    .json({ message: UNAUTHORIZED });
+                res.locals.authentication = UNAUTHORIZED;
+                break;
             default:
-                if (!user) {
-                    return res
-                        .status(StatusCodes.UNAUTHORIZED)
-                        .json({ message: UNAUTHORIZED });
-                }
-                return;
+                if (!user) res.locals.authentication = UNAUTHORIZED;
+                break;
         }
     })(req, res, next);
 
-    if (!res.headersSent) {
-        return next();
+    switch (res.locals.authentication) {
+        case FORBIDDEN:
+            return res
+                .status(StatusCodes.FORBIDDEN)
+                .json({ message: FORBIDDEN });
+        case UNAUTHORIZED:
+            return res
+                .status(StatusCodes.UNAUTHORIZED)
+                .json({ message: UNAUTHORIZED });
+        default:
+            return next();
     }
 };
 

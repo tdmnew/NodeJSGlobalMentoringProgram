@@ -34,6 +34,7 @@ class GroupService implements GroupServiceInterface {
 
     async createGroup(groupParams: Partial<Group>): Promise<Model<Group>> {
         const group = await this.groupModel.create(groupParams);
+
         return group;
     }
 

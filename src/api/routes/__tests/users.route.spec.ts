@@ -1,14 +1,15 @@
-import express, { json, NextFunction } from 'express';
+import express, { json } from 'express';
 import request from 'supertest';
 
 import users from '../users.route';
 
-import CONSTANTS from '../../../constants';
-const { REGISTER_SUCCESSFUL } = CONSTANTS.CONTROLLER_RESPONSE;
-
 const app = express();
 app.use(json());
 app.use('/', users);
+
+import CONSTANTS from '../../../constants';
+const { REGISTER_UNSUCCESSFUL, REGISTER_USER_EXISTS } =
+    CONSTANTS.CONTROLLER_RESPONSE;
 
 const user = {
     id: '1',
@@ -40,23 +41,50 @@ const createdUser = {
     age: 23
 };
 
-const successfulUserCreation = {
-    info: REGISTER_SUCCESSFUL,
-    user: createdUser
-};
-
 jest.mock('../../../middlewares/auth/secureRoute.auth', () =>
-    jest.fn((req, res, next) => next())
+    jest.fn(({}, {}, next) => next())
+);
+
+jest.mock('../../../middlewares/auth/signToken.auth', () =>
+    jest.fn(({}, res, {}) =>
+        res.json({
+            info: 'Successfully registered',
+            user: createdUser
+        })
+    )
 );
 
 jest.mock('../../../services/user.service.ts', () => {
     return jest.fn().mockImplementation(() => {
         return {
-            createUser: jest.fn().mockReturnValue(successfulUserCreation),
-            getUsers: jest.fn().mockReturnValue([user]),
-            getUser: jest.fn().mockReturnValue(user),
-            updateUser: jest.fn().mockReturnValue(updatedUser),
-            deleteUser: jest.fn().mockReturnValue(deletedUser)
+            createUser: jest
+                .fn()
+                .mockReturnValueOnce({
+                    info: 'Successfully registered',
+                    user: createdUser
+                })
+                .mockReturnValueOnce({
+                    info: 'A user already exists with this login. Please try again with a different name'
+                })
+                .mockReturnValueOnce({
+                    info: 'Registration could not be completed at this time. Please try again later.'
+                }),
+            getUsers: jest
+                .fn()
+                .mockReturnValueOnce([user])
+                .mockReturnValueOnce(null),
+            getUser: jest
+                .fn()
+                .mockReturnValueOnce(user)
+                .mockReturnValueOnce(null),
+            updateUser: jest
+                .fn()
+                .mockReturnValueOnce(updatedUser)
+                .mockReturnValueOnce(null),
+            deleteUser: jest
+                .fn()
+                .mockReturnValueOnce(deletedUser)
+                .mockReturnValueOnce(null)
         };
     });
 });
@@ -96,6 +124,61 @@ describe("When the route '/users' is used with the correct parameters", () => {
         const res = await request(app).post('/').send(createdUser);
 
         expect(res.statusCode).toBe(200);
-        expect(res.body).toEqual(successfulUserCreation);
+        expect(res.body).toEqual({
+            info: 'Successfully registered',
+            user: createdUser
+        });
+    });
+});
+
+describe("When the route '/users' is used with the incorrect parameters and/or a user already exists", () => {
+    test("'get' method for '/users/' is called and returns the correct response", async () => {
+        const res = await request(app).get('/');
+
+        expect(res.statusCode).toBe(404);
+    });
+
+    test("'get' method for '/users/:id' is called and returns the correct response", async () => {
+        const res = await request(app).get('/1');
+
+        expect(res.statusCode).toBe(404);
+    });
+
+    test("'put' method for '/users/:id' is called and returns the correct response (User not found)", async () => {
+        const res = await request(app)
+            .put('/1')
+            .send({ login: updatedUser.login });
+
+        expect(res.statusCode).toBe(404);
+    });
+
+    test("'put' method for '/users/:id' is called and returns the correct response (Wrong params)", async () => {
+        const res = await request(app).put('/1').send({ login: '' });
+
+        expect(res.statusCode).toBe(500);
+    });
+
+    test("'delete' method for '/users/:id' is called and returns the correct response", async () => {
+        const res = await request(app).delete('/1');
+
+        expect(res.statusCode).toBe(404);
+    });
+
+    test("'post' method for '/users/' is called and returns the correct response (User exists)", async () => {
+        const res = await request(app).post('/').send(createdUser);
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toEqual({
+            info: REGISTER_USER_EXISTS
+        });
+    });
+
+    test("'post' method for '/users/' is called and returns the correct response (Internal service error)", async () => {
+        const res = await request(app).post('/').send(createdUser);
+
+        expect(res.statusCode).toBe(500);
+        expect(res.body).toEqual({
+            info: REGISTER_UNSUCCESSFUL
+        });
     });
 });

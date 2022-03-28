@@ -59,8 +59,14 @@ class UserService implements UserServiceInterface {
         login: User['login'],
         password: User['password']
     ): Promise<UserAccessToken> {
-        const user: any = await this.userModel.findOne(findUser({ login }));
-        const isValidPass = await comparePassword(password, user?.password);
+        const user: Model<User> | null = await this.userModel.findOne(
+            findUser({ login })
+        );
+
+        const isValidPass = await comparePassword(
+            password,
+            user?.get('password') as string
+        );
 
         if (!user || !isValidPass) return { info: CREDENTIALS_INCORRECT };
 

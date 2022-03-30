@@ -5,9 +5,3 @@ jest.mock('../src/config/index.ts', () => ({
         DB_URI: 'n/a'
     }
 }));
-
-jest.mock('../src/models/index.ts', () => ({
-    User: jest.fn(),
-    Group: jest.fn(),
-    UserGroup: jest.fn()
-}));

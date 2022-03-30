@@ -7,18 +7,19 @@ const app = express();
 app.use(json());
 app.use('/', groups);
 
-const group = {
+const group1 = {
     id: '1',
     name: 'Admin',
     permissions: ['READ', 'WRITE', 'DELETE', 'SHARE', 'UPLOAD FILES']
 };
 
-const createdGroup = {
+const group2 = {
+    id: '2',
     name: 'User',
     permissions: ['READ', 'WRITE']
 };
 
-const updatedGroup = {
+const group1Updated = {
     id: '1',
     name: 'Updated Group',
     permissions: ['READ', 'WRITE', 'DELETE', 'SHARE', 'UPLOAD FILES']
@@ -32,79 +33,96 @@ const userToAdd = {
     isDeleted: false
 };
 
+const mockGroupInstanceUpdate = {
+    update: jest.fn(),
+    ...group1Updated
+};
+
+const mockGroupInstanceDelete = {
+    destroy: jest.fn(),
+    ...group1
+};
+
 jest.mock('../../../middlewares/auth/secureRoute.auth.ts', () =>
     jest.fn((req, res, next) => next())
 );
 
-jest.mock('../../../services/group.service.ts', () => {
-    return jest.fn().mockImplementation(() => {
-        return {
-            getGroup: jest
-                .fn()
-                .mockReturnValueOnce(group)
-                .mockReturnValueOnce(null),
-            getGroups: jest
-                .fn()
-                .mockReturnValueOnce([group])
-                .mockReturnValueOnce(null),
-            addUsersToGroup: jest
-                .fn()
-                .mockReturnValueOnce({ success: true })
-                .mockReturnValueOnce({ success: false }),
-            updateGroup: jest
-                .fn()
-                .mockReturnValueOnce(updatedGroup)
-                .mockReturnValueOnce(null),
-            createGroup: jest.fn().mockReturnValueOnce(createdGroup),
-            deleteGroup: jest
-                .fn()
-                .mockReturnValueOnce(group)
-                .mockReturnValueOnce(null)
-        };
-    });
+const mockFindOne: jest.Mock = jest.fn();
+const mockFindAll: jest.Mock = jest.fn();
+const mockCreate: jest.Mock = jest.fn();
+
+jest.mock('../../../models', () => {
+    return {
+        Group: {
+            findOne: () => mockFindOne(),
+            findAll: () => mockFindAll(),
+            create: () => mockCreate()
+        },
+        sequelize: {
+            transaction: jest.fn()
+        }
+    };
 });
 
 describe("When the route '/groups' is used with the correct parameters", () => {
     test("'get' method for '/groups/' is called and returns the correct response", async () => {
+        mockFindAll.mockImplementationOnce(() => Promise.resolve([group1]));
+
         const res = await request(app).get('/');
 
         expect(res.statusCode).toBe(200);
-        expect(res.body).toEqual([group]);
+        expect(res.body).toEqual([group1]);
     });
 
     test("'get' method for '/groups/:id' is called and returns the correct response", async () => {
+        mockFindOne.mockImplementationOnce(() => Promise.resolve(group1));
+
         const res = await request(app).get('/1');
 
         expect(res.statusCode).toBe(200);
-        expect(res.body).toEqual(group);
+        expect(res.body).toEqual(group1);
     });
 
     test("'put' method for '/groups/:id' is called and returns the correct response", async () => {
+        mockFindOne.mockImplementationOnce(() =>
+            Promise.resolve(mockGroupInstanceUpdate)
+        );
+
         const res = await request(app).put('/1').send({
-            name: updatedGroup.name
+            name: group1Updated.name
         });
 
         expect(res.statusCode).toBe(200);
-        expect(res.body).toEqual(updatedGroup);
+        expect(res.body).toEqual(group1Updated);
     });
 
     test("'delete' method for '/groups/:id' is called and returns the correct response", async () => {
+        mockFindOne.mockImplementationOnce(() =>
+            Promise.resolve(mockGroupInstanceDelete)
+        );
+
         const res = await request(app).delete('/1');
 
         expect(res.statusCode).toBe(200);
-        expect(res.body).toEqual(group);
+        expect(res.body).toEqual(group1);
     });
 
     test("'post' method for '/groups/' is called and returns the correct response", async () => {
-        const res = await request(app).post('/').send(createdGroup);
+        mockFindOne.mockImplementationOnce(() => Promise.resolve(null));
+
+        mockCreate.mockImplementationOnce(() => Promise.resolve(group2));
+
+        const res = await request(app)
+            .post('/')
+            .send({ name: group2.name, permissions: group2.permissions });
 
         expect(res.statusCode).toBe(200);
-        expect(res.body).toEqual(createdGroup);
+        expect(res.body).toEqual(group2);
     });
 
     test("'post' method for '/groups/:id/users/add-users-to-group' is called and returns the correct response", async () => {
         const res = await request(app)
-            .post(`/${group.id}/users/add-users-to-group`)
+            .post(`/${group1.id}/users/add-users-to-group`)
             .send({ userIds: [userToAdd.id] });
 
         expect(res.statusCode).toBe(200);
@@ -114,20 +132,26 @@ describe("When the route '/groups' is used with the correct parameters", () => {
 
 describe("When the route '/groups' is used with the incorrect parameters and/or a group is not found", () => {
     test("'get' method for '/groups/' is called and returns the correct response", async () => {
+        mockFindAll.mockImplementationOnce(() => Promise.resolve(null));
+
         const res = await request(app).get('/');
 
         expect(res.statusCode).toBe(404);
     });
 
     test("'get' method for '/groups/:id' is called and returns the correct response", async () => {
+        mockFindOne.mockImplementationOnce(() => Promise.resolve(null));
+
         const res = await request(app).get('/1');
 
         expect(res.statusCode).toBe(404);
     });
 
     test("'put' method for '/groups/:id' is called and returns the correct response (Group not found)", async () => {
+        mockFindOne.mockImplementationOnce(() => Promise.resolve(null));
+
         const res = await request(app).put('/1').send({
-            name: updatedGroup.name
+            name: group1Updated.name
         });
 
         expect(res.statusCode).toBe(404);
@@ -140,6 +164,8 @@ describe("When the route '/groups' is used with the incorrect parameters and/or 
     });
 
     test("'delete' method for '/groups/:id' is called and returns the correct response", async () => {
+        mockFindOne.mockImplementationOnce(() => Promise.resolve(null));
+
         const res = await request(app).delete('/1');
 
         expect(res.statusCode).toBe(404);
@@ -153,10 +179,9 @@ describe("When the route '/groups' is used with the incorrect parameters and/or 
 
     test("'post' method for '/groups/:id/users/add-users-to-group' is called and returns the correct response", async () => {
         const res = await request(app)
-            .post(`/${group.id}/users/add-users-to-group`)
-            .send({ userIds: [userToAdd.id] });
+            .post(`/${group1.id}/users/add-users-to-group`)
+            .send({ userIds: [] });
 
-        expect(res.statusCode).toBe(400);
-        expect(res.body).toEqual({ success: false });
+        expect(res.statusCode).toBe(500);
     });
 });

@@ -30,7 +30,7 @@ const hashPassword = async (originalPass?: string): Promise<string | void> => {
 
     try {
         return await bcrypt.hash(originalPass, 10);
-    } catch (err: unknown) {
+    } catch (err) {
         if (err instanceof Error) throw new Error(err.message);
     }
 };
@@ -43,7 +43,7 @@ const comparePassword = async (
 
     try {
         return await bcrypt.compare(plainPass, hashedPass);
-    } catch (err: unknown) {
+    } catch (err) {
         if (err instanceof Error) throw new Error(err.message);
     }
 };

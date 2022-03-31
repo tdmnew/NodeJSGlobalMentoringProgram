@@ -28,9 +28,7 @@ export const autoSuggestions = (loginSubstring?: string, limit?: number) => ({
         }
     ],
     where: {
-        login: {
-            [Op.substring]: loginSubstring
-        },
+        ...(loginSubstring && { login: { [Op.substring]: loginSubstring } }),
         isDeleted: false
     }
 });

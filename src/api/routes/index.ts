@@ -1,8 +1,8 @@
 import { Router } from 'express';
 
 import userRoute from './users.route';
-import groupRoute from './groups.route';
 import loginRoute from './login.route';
+import groupRoute from './groups.route';
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 

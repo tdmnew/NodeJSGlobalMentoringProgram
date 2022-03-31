@@ -4,8 +4,8 @@ import bcrypt from 'bcrypt';
 import { User as UserModel } from '../models';
 import User from '../types/user.type';
 import { userAccess } from '../data-access';
-import CONSTANTS from '../constants';
 
+import CONSTANTS from '../constants';
 const {
     REGISTER_SUCCESSFUL,
     REGISTER_UNSUCCESSFUL,
@@ -30,7 +30,7 @@ const hashPassword = async (originalPass?: string): Promise<string | void> => {
 
     try {
         return await bcrypt.hash(originalPass, 10);
-    } catch (err: unknown) {
+    } catch (err) {
         if (err instanceof Error) throw new Error(err.message);
     }
 };
@@ -43,7 +43,7 @@ const comparePassword = async (
 
     try {
         return await bcrypt.compare(plainPass, hashedPass);
-    } catch (err: unknown) {
+    } catch (err) {
         if (err instanceof Error) throw new Error(err.message);
     }
 };
@@ -65,7 +65,7 @@ class UserService implements UserServiceInterface {
 
         const isValidPass = await comparePassword(
             password,
-            user?.getDataValue('password')
+            user?.get('password') as string
         );
 
         if (!user || !isValidPass) return { info: CREDENTIALS_INCORRECT };

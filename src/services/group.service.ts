@@ -14,8 +14,8 @@ import { TransactionResult, TransactionError } from '../types/transaction.type';
 import { groupAccess } from '../data-access';
 
 interface GroupServiceInterface {
-  groupModel: typeof GroupModel;
-  userGroupModel: typeof UserGroupModel;
+    groupModel: typeof GroupModel;
+    userGroupModel: typeof UserGroupModel;
 }
 
 const { findGroup, findGroups } = groupAccess;
@@ -34,10 +34,14 @@ class GroupService implements GroupServiceInterface {
 
     async createGroup(groupParams: Partial<Group>): Promise<Model<Group>> {
         const group = await this.groupModel.create(groupParams);
+
         return group;
     }
 
-    async updateGroup(groupId: Group['id'], groupParams: Partial<Group>): Promise<Model<Group> | null> {
+    async updateGroup(
+        groupId: Group['id'],
+        groupParams: Partial<Group>
+    ): Promise<Model<Group> | null> {
         const group = await this.groupModel.findOne(findGroup(groupId));
 
         if (!group) return null;
@@ -59,7 +63,9 @@ class GroupService implements GroupServiceInterface {
     }
 
     async getGroups(): Promise<Model<Group>[] | null> {
-        const groups: Model<Group>[] = await this.groupModel.findAll(findGroups());
+        const groups: Model<Group>[] = await this.groupModel.findAll(
+            findGroups()
+        );
 
         if (!groups) return null;
 

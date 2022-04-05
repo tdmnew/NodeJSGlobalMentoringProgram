@@ -4,7 +4,7 @@ import { SQL } from '../config/index';
 const postgressLoader = async () => {
     try {
         // Initialise client
-        const client = new Client(SQL.CONFIG);
+        const client = new Client(SQL);
         const connection = await client.connect();
 
         console.log('Postgres DB Loaded');

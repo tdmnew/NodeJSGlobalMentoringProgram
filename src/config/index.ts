@@ -18,5 +18,11 @@ export const ENV_VARIABLES = {
     DB_PORT: process.env.DB_PORT
 };
 
-export * as SQL from './sql.config';
-export { SEQUELIZE_CONFIG } from './sequelize.config';
+export const SQL = {
+    connectionString: ENV_VARIABLES.DB_URI,
+    user: ENV_VARIABLES.DB_USER,
+    pass: ENV_VARIABLES.DB_PASS,
+    ssl: {
+        rejectUnauthorized: false
+    }
+};

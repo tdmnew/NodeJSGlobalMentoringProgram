@@ -1,0 +1,13 @@
+version: "3"
+services:
+  web:
+    build: .
+    volumes:
+      - .:/usr/app/
+      - /usr/app/dist
+    command: ["node", "./dist/index.js"]
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    expose: 
+      - "${SERVER_PORT}"
+    env_file: .env

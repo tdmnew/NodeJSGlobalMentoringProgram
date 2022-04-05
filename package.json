@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "npm run knex:migrate:latest && npm run knex:migrate:seed && nodemon ./src/index.ts",
+        "dev": "npm run knex:migrate:latest && npm run knex:migrate:seed && nodemon ./src/index.ts",
         "build": "babel ./src -d ./dist --extensions '.ts'",
         "test": "NODE_ENV=test jest --config ./jest.config.json",
         "test:watch": "NODE_ENV=test npm run test -- --watch",
@@ -24,6 +24,7 @@
         "@babel/cli": "^7.15.7",
         "@babel/core": "^7.15.5",
         "@babel/node": "^7.15.8",
+        "@babel/plugin-transform-runtime": "^7.17.0",
         "@babel/preset-env": "^7.15.6",
         "@babel/preset-typescript": "^7.15.0",
         "@jest-mock/express": "^1.4.5",
